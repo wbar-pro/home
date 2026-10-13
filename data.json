@@ -1,0 +1,11 @@
+{
+  "name": "WBAR-PRO",
+  "version": "1.0.0",
+  "status": "online",
+  "message": "Serwer działa poprawnie.",
+  "files": [
+    "get.this.py",
+    "versioninfo.txt",
+    "wbar.ico"
+  ]
+}
