@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>WBAR-PRO Test</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+    <h1>WBAR-PRO — Panel Testowy</h1>
+
+    <div id="statusBox" class="status">Ładowanie danych...</div>
+
+    <h2>Pliki na serwerze:</h2>
+    <ul id="fileList" class="file-list"></ul>
+</div>
+
+<script>
+fetch("data.json")
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById("statusBox").innerText =
+            `${data.name} v${data.version} — ${data.message}`;
+
+        let list = document.getElementById("fileList");
+        data.files.forEach(f => {
+            let li = document.createElement("li");
+            li.innerText = f;
+            list.appendChild(li);
+        });
+    })
+    .catch(err => {
+        document.getElementById("statusBox").innerText =
+            "Błąd ładowania JSON.";
+    });
+</script>
+
+</body>
+</html>
