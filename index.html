@@ -1,40 +1,456 @@
 <!DOCTYPE html>
-<html lang="pl">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>WBAR-PRO Test</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <title>WBAR Platform</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!--
+    This page is part of the WBAR‑PRO ecosystem, built as a public technology platform.
+    It showcases the core runtime, overlay engine, social modules and API gateway for creators.
+    The goal of WBAR‑PRO is to provide an open, extensible environment for apps, games and communities.
+    All content on this page is intended for public use, without proprietary copyright restrictions.
+  -->
+  <style>
+    :root {
+      --bg: #05060a;
+      --bg-alt: #0c0f18;
+      --accent: #4f46e5;
+      --accent-soft: rgba(79, 70, 229, 0.18);
+      --accent-strong: rgba(79, 70, 229, 0.35);
+      --text-main: #f9fafb;
+      --text-muted: #9ca3af;
+      --border-soft: #1f2937;
+      --card-bg: #0b1020;
+      --shadow-soft: 0 30px 80px rgba(0, 0, 0, 0.65);
+      --radius-lg: 22px;
+      --radius-md: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
+      background: radial-gradient(circle at top, #111827 0, #020617 45%, #000000 100%);
+      color: var(--text-main);
+      min-height: 100vh;
+    }
+
+    .page {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 60px 24px 80px;
+    }
+
+    .hero {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 40px;
+      align-items: flex-start;
+      margin-bottom: 60px;
+    }
+
+    .hero-main {
+      flex: 1.2;
+      min-width: 280px;
+    }
+
+    .hero-side {
+      flex: 0.9;
+      min-width: 260px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid var(--border-soft);
+      color: var(--text-muted);
+      font-size: 13px;
+      margin-bottom: 18px;
+    }
+
+    .badge-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 0 6px var(--accent-soft);
+    }
+
+    .title {
+      font-size: 52px;
+      line-height: 1.05;
+      letter-spacing: -0.04em;
+      font-weight: 800;
+      margin-bottom: 18px;
+    }
+
+    .title span {
+      background: linear-gradient(120deg, #4f46e5, #22c55e, #06b6d4);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .subtitle {
+      font-size: 19px;
+      line-height: 1.6;
+      color: var(--text-muted);
+      max-width: 540px;
+      margin-bottom: 26px;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+
+    .btn-primary {
+      padding: 12px 22px;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 600;
+      background: linear-gradient(135deg, #4f46e5, #6366f1);
+      color: #f9fafb;
+      box-shadow: 0 18px 40px rgba(79, 70, 229, 0.45);
+    }
+
+    .btn-ghost {
+      padding: 11px 20px;
+      border-radius: 999px;
+      border: 1px solid var(--border-soft);
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 500;
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text-muted);
+    }
+
+    .hero-note {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .hero-card {
+      background: radial-gradient(circle at top left, #111827 0, #020617 55%);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-soft);
+      box-shadow: var(--shadow-soft);
+      padding: 22px 22px 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background:
+        radial-gradient(circle at 0% 0%, rgba(79, 70, 229, 0.18) 0, transparent 55%),
+        radial-gradient(circle at 100% 0%, rgba(34, 197, 94, 0.16) 0, transparent 55%);
+      opacity: 0.9;
+      pointer-events: none;
+    }
+
+    .hero-card-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .hero-card-title {
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .hero-card-tag {
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text-muted);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .hero-pill {
+      padding: 12px 12px;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(31, 41, 55, 0.9);
+      background: rgba(15, 23, 42, 0.96);
+      backdrop-filter: blur(12px);
+      font-size: 14px;
+    }
+
+    .hero-pill-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .hero-pill-main {
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .hero-pill-main span {
+      color: #a5b4fc;
+    }
+
+    .hero-pill-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 3px;
+    }
+
+    .section {
+      margin-top: 40px;
+      padding: 26px 22px 24px;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-soft);
+      background: rgba(10, 16, 30, 0.96);
+      backdrop-filter: blur(18px);
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 16px;
+      margin-bottom: 22px;
+    }
+
+    .section-title {
+      font-size: 22px;
+      font-weight: 600;
+    }
+
+    .section-subtitle {
+      font-size: 14px;
+      color: var(--text-muted);
+      max-width: 420px;
+    }
+
+    .section-tag {
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      color: var(--text-muted);
+    }
+
+    .modules-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .module-card {
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(31, 41, 55, 0.9);
+      background: rgba(15, 23, 42, 0.96);
+      padding: 14px 14px 13px;
+      font-size: 14px;
+    }
+
+    .module-name {
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .module-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .module-tagline {
+      font-size: 11px;
+      color: #a5b4fc;
+    }
+
+    .footer-note {
+      margin-top: 26px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .footer-note span {
+      color: #a5b4fc;
+    }
+
+    @media (max-width: 900px) {
+      .title {
+        font-size: 40px;
+      }
+      .subtitle {
+        font-size: 17px;
+      }
+      .modules-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 640px) {
+      .page {
+        padding-top: 40px;
+      }
+      .title {
+        font-size: 32px;
+      }
+      .hero {
+        gap: 26px;
+      }
+      .modules-grid {
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+      }
+    }
+  </style>
 </head>
 <body>
+  <div class="page">
+    <header class="hero">
+      <div class="hero-main">
+        <div class="badge">
+          <span class="badge-dot"></span>
+          <span>WBAR‑PRO · Public Technology Platform</span>
+        </div>
 
-<div class="container">
-    <h1>WBAR-PRO — Panel Testowy</h1>
+        <h1 class="title">
+          WBAR <span>Platform</span> for apps, games and communities.
+        </h1>
 
-    <div id="statusBox" class="status">Ładowanie danych...</div>
+        <p class="subtitle">
+          A public, modular ecosystem that combines runtime, overlay engine, social features and API gateway—
+          designed for creators, server owners and developers who want full control without proprietary lock‑in.
+        </p>
 
-    <h2>Pliki na serwerze:</h2>
-    <ul id="fileList" class="file-list"></ul>
-</div>
+        <div class="hero-actions">
+          <button class="btn-primary">Open WBAR‑PRO Panel</button>
+          <button class="btn-ghost">View modules overview</button>
+        </div>
 
-<script>
-fetch("data.json")
-    .then(response => response.json())
-    .then(data => {
-        document.getElementById("statusBox").innerText =
-            `${data.name} v${data.version} — ${data.message}`;
+        <p class="hero-note">
+          Hosted on <strong>wbar-pro.eu.org</strong>. All modules are openly documented and intended for public use.
+        </p>
+      </div>
 
-        let list = document.getElementById("fileList");
-        data.files.forEach(f => {
-            let li = document.createElement("li");
-            li.innerText = f;
-            list.appendChild(li);
-        });
-    })
-    .catch(err => {
-        document.getElementById("statusBox").innerText =
-            "Błąd ładowania JSON.";
-    });
-</script>
+      <aside class="hero-side">
+        <div class="hero-card">
+          <div class="hero-card-inner">
+            <div class="hero-card-header">
+              <div class="hero-card-title">WBAR‑PRO STACK</div>
+              <div class="hero-card-tag">Runtime · Overlay · Social · API</div>
+            </div>
 
+            <div class="hero-grid">
+              <div class="hero-pill">
+                <div class="hero-pill-label">Core Runtime</div>
+                <div class="hero-pill-main">WBAR Core <span>for desktop apps</span></div>
+                <div class="hero-pill-sub">Process management, updates, configuration.</div>
+              </div>
+
+              <div class="hero-pill">
+                <div class="hero-pill-label">Overlay Engine</div>
+                <div class="hero-pill-main">In‑game overlays <span>for creators</span></div>
+                <div class="hero-pill-sub">HUDs, panels, widgets for games and tools.</div>
+              </div>
+
+              <div class="hero-pill">
+                <div class="hero-pill-label">Social Layer</div>
+                <div class="hero-pill-main">Profiles & badges <span>for users</span></div>
+                <div class="hero-pill-sub">Followers, presence, chat and activity.</div>
+              </div>
+
+              <div class="hero-pill">
+                <div class="hero-pill-label">API Gateway</div>
+                <div class="hero-pill-main">Public API <span>for integrations</span></div>
+                <div class="hero-pill-sub">REST endpoints for apps, servers and services.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </header>
+
+    <section class="section">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Available WBAR modules</h2>
+          <p class="section-subtitle">
+            Each module is designed to be independent, composable and publicly accessible—so you can use WBAR
+            as a full platform or just the parts that fit your project.
+          </p>
+        </div>
+        <div class="section-tag">Public, no proprietary copyright</div>
+      </div>
+
+      <div class="modules-grid">
+        <div class="module-card">
+          <div class="module-name">WBAR Core</div>
+          <div class="module-desc">
+            Base runtime for WBAR‑powered applications and services.
+          </div>
+          <div class="module-tagline">Process control · Updates · Config</div>
+        </div>
+
+        <div class="module-card">
+          <div class="module-name">Overlay Engine</div>
+          <div class="module-desc">
+            Rendering layer for in‑game and in‑app overlays.
+          </div>
+          <div class="module-tagline">HUDs · Panels · Widgets</div>
+        </div>
+
+        <div class="module-card">
+          <div class="module-name">WBAR Social</div>
+          <div class="module-desc">
+            User profiles, badges, followers and real‑time chat.
+          </div>
+          <div class="module-tagline">Community · Presence · Messaging</div>
+        </div>
+
+        <div class="module-card">
+          <div class="module-name">API Gateway</div>
+          <div class="module-desc">
+            Public API surface for apps, servers and integrations.
+          </div>
+          <div class="module-tagline">REST · Tokens · Webhooks</div>
+        </div>
+      </div>
+
+      <p class="footer-note">
+        WBAR‑PRO is intentionally built as a <span>public platform</span>: you can mirror, extend or fork the stack
+        without needing additional licensing text or copyright notices on this page.
+      </p>
+    </section>
+  </div>
 </body>
 </html>
